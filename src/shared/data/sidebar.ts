@@ -1,5 +1,5 @@
 import { SidebarNavItem } from '@/shared/types/sidebar'
-import { Clipboard, Gavel, LayoutDashboard } from 'lucide-react'
+import { CalendarCheck, Clipboard, Gavel, LayoutDashboard } from 'lucide-react'
 
 export const contadorSidebar: SidebarNavItem[] = [
   {
@@ -41,7 +41,7 @@ export const contadorSidebar: SidebarNavItem[] = [
   {
     type: 'group',
     title: 'Cierre de Planilla',
-    icon: Gavel,
+    icon: CalendarCheck,
     items: [
       {
         title: 'Auditoría de Presupuesto',

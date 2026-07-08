@@ -21,6 +21,7 @@ import {
 import { contadorSidebar } from '@/shared/data/sidebar'
 import NavLink from './nav-link'
 import NavGroup from './nav-group'
+import { useSidebarGroupState } from '@/shared/hooks/use-sidebar-group'
 
 export default function AppSidebar({
   children,
@@ -28,29 +29,10 @@ export default function AppSidebar({
   children: React.ReactNode
 }) {
   const pathname = usePathname() // Variable que obtiene la ruta
-
-  // Funcion para buscar el titulo del grupo padre al que pertence la ruta actual
-  const activeGroupTitle = contadorSidebar.find(
-    (item) =>
-      item.type === 'group' &&
-      item.items.some((subItem) => subItem.url === pathname),
-  )?.title
-
-  // Estado para el grupo actual desplegado
-  const [openGroup, setOpenGroup] = useState<string | null>(
-    activeGroupTitle ?? null,
+  const { openGroup, setOpenGroup } = useSidebarGroupState(
+    contadorSidebar,
+    pathname,
   )
-
-  // Estado que guarda el titulo de la ruta anterior
-  const [prevActiveTitle, setPrevActiveTitle] = useState<
-    string | null | undefined
-  >(activeGroupTitle)
-
-  // Si el usuario cambio abre automaticamente el nuevo grupo en el menu
-  if (activeGroupTitle !== prevActiveTitle) {
-    setPrevActiveTitle(activeGroupTitle)
-    setOpenGroup(activeGroupTitle ?? null)
-  }
 
   return (
     <>
