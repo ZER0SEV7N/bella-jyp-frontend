@@ -30,7 +30,7 @@ export default function BreadcrumbTitle({ pathname }: BreadcrumbProps) {
           </>
         )}
         <BreadcrumbItem>
-          <BreadcrumbPage className="text-[#150AB4] font-medium">
+          <BreadcrumbPage className="text-primary-blue font-medium">
             {breadcrumbMatch.title}
           </BreadcrumbPage>
         </BreadcrumbItem>

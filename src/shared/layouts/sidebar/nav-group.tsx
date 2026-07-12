@@ -43,14 +43,14 @@ export default function NavGroup({
                 tooltip={item.title}
                 className={cn(
                   'h-10 cursor-pointer rounded-none pl-5 transition-all duration-200 text-white',
-                  'hover:bg-[#09267B]! hover:text-white!',
+                  'hover:bg-secondary-blue! hover:text-white!',
                   'border-l-3 border-transparent',
                   isGroupActive
                     ? open
-                      ? 'bg-[#143593] border-white'
-                      : 'bg-[#09267B] border-white'
+                      ? 'bg-collapsible-blue border-white'
+                      : 'bg-secondary-blue border-white'
                     : open
-                      ? 'bg-[#09267B] border-white'
+                      ? 'bg-secondary-blue border-white'
                       : 'bg-transparent',
                 )}
               >
@@ -61,7 +61,7 @@ export default function NavGroup({
           />
           <CollapsibleContent
             className={cn(
-              'overflow-hidden bg-[#143593] data-open:animate-collapsible-down data-closed:animate-collapsible-up',
+              'overflow-hidden bg-collapsible-blue data-open:animate-collapsible-down data-closed:animate-collapsible-up',
             )}
           >
             <SidebarMenuSub className="m-0 gap-0 border-0 p-0">
@@ -74,10 +74,10 @@ export default function NavGroup({
                       isActive={isSubItemActive}
                       render={<Link href={subItem.url}>{subItem.title}</Link>}
                       className={cn(
-                        'w-full rounded-none pl-12 text-white! hover:bg-[#09267B] hover:text-white',
+                        'w-full rounded-none pl-12 text-white! hover:bg-secondary-blue hover:text-white',
                         'border-l-3 border-white transition-all duration-200',
-                        'active:bg-[#09267B]!',
-                        isSubItemActive && 'bg-[#09267B]!',
+                        'active:bg-secondary-blue!',
+                        isSubItemActive && 'bg-secondary-blue!',
                       )}
                     />
                   </SidebarMenuSubItem>

@@ -36,7 +36,7 @@ export default function AppSidebar({
   return (
     <>
       <SidebarProvider>
-        <Sidebar className="**:data-[slot=sidebar-inner]:bg-[#150AB4]! **:data-[slot=sidebar-inner]:text-white!">
+        <Sidebar className="**:data-[slot=sidebar-inner]:bg-primary-blue! **:data-[slot=sidebar-inner]:text-white!">
           <SidebarHeader className="border-b border-blue-800">
             <Link
               href={'/contador/dashboard'}
@@ -57,7 +57,7 @@ export default function AppSidebar({
           <SidebarContent>
             <SidebarGroup className="p-0 m-0">
               <SidebarGroupContent>
-                <SidebarMenu className="gap-1">
+                <SidebarMenu>
                   {contadorSidebar.map((item) =>
                     item.type === 'link' ? (
                       <NavLink
@@ -85,7 +85,7 @@ export default function AppSidebar({
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  className="rounded-none pl-5 h-10 hover:bg-[#09267B] active:bg-[#09267B] border-l-3 border-transparent"
+                  className="rounded-none pl-5 h-10 hover:bg-secondary-blue active:bg-secondary-blue border-l-3 border-transparent"
                   render={
                     <Link href={'/sign-in'}>
                       <LogOut color="white" />

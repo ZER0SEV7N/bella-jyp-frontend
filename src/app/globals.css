@@ -46,6 +46,9 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-primary-blue: var(--blue-primary);
+  --color-secondary-blue: var(--blue-secondary);
+  --color-collapsible-blue: var(--blue-collapsible);
   --animate-collapsible-down: collapsible-down 0.2s ease-out;
   --animate-collapsible-up: collapsible-up 0.2s ease-out;
 
@@ -100,6 +103,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --blue-primary: oklch(35.9% 0.234 267.5);
+  --blue-secondary: oklch(31.6% 0.147 264.4);
+  --blue-collapsible: oklch(37.3% 0.159 264.7);
 }
 
 .dark {

@@ -17,9 +17,9 @@ export default function NavLink({ item, pathname }: props) {
       <SidebarMenuButton
         isActive={isActive}
         className={cn(
-          'rounded-none h-10 pl-5 hover:text-white! hover:bg-[#09267B]!',
+          'rounded-none h-10 pl-5 hover:text-white! hover:bg-secondary-blue!',
           'border-l-3 border-transparent',
-          isActive && 'border-white! bg-[#09267B]!',
+          isActive && 'border-white! bg-secondary-blue!',
         )}
         render={
           <Link href={item.url}>
