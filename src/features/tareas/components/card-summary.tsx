@@ -1,107 +1,137 @@
-import { Card,CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Card, CardContent } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { formatSoles } from "@/shared/utils/format";
-import { Wallet, AlertTriangle, ClipboardCheck, Activity } from "lucide-react";
+import { 
+  Wallet, 
+  AlertTriangle, 
+  ClipboardCheck, 
+  RefreshCw 
+} from "lucide-react";
 
-// 1. El contrato(Mock DTO): Mas adelante esto  vendra de shared contracts
+// 1. EL CONTRATO (Mock DTO)
 type DashboardMetricsDTO = {
-    totalNomina: number;
-    incrementoNomina: number;
-    incidenciasPendientes: number;
-    tareasPorAprobar: number;
-    estadoPeriodo: "En Proceso" | "Cerrado" | "Auditoria";
-
+  totalNomina: number;
+  incrementoNomina: number;
+  incidenciasPendientes: number;
+  tareasPorAprobar: number;
+  estadoPeriodo: "En Proceso" | "Cerrado" | "Auditoría";
 };
 
-// 2. LA SIMULACION: Limitamos el tiempo de respuesta en NestKS/n8n
+// 2. LA SIMULACIÓN ASÍNCRONA
 async function fetchMetrics(): Promise<DashboardMetricsDTO> {
-    //Pausamos la ekecucion 1.5 segundos para simular la latencia de red
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    return{
-        totalNomina: 125000,
-        incrementoNomina: 2.4,
-        incidenciasPendientes: 12,
-        tareasPorAprobar: 5,
-        estadoPeriodo: "En Proceso",
-    };
+  await new Promise((resolve) => setTimeout(resolve, 1500)); 
+  return {
+    totalNomina: 125000,
+    incrementoNomina: 2.4,
+    incidenciasPendientes: 12,
+    tareasPorAprobar: 5,
+    estadoPeriodo: "En Proceso",
+  };
 }
 
-// 3. EL COMPONENTE (Server Component: se ejecuta 100% en el servidor)
+// 3. EL COMPONENTE (Server Component con UI Avanzada)
 export default async function CardSummary() {
-    // Solicitamos los datos. Al ser un server component, podemos usar 'await' directamente
-    const metrics = await fetchMetrics();
+  const metrics = await fetchMetrics();
 
-    return(
-        <>
-            <Card className="border-t-4 border-t-primary shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                    <CardTitle className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
-                        Costo Total de Planilla
-                    </CardTitle>
-                    <Wallet className="w-4 h-4 text-primary"/>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-3xl font-bold text-foreground">
-                        {formatSoles(metrics.totalNomina)}
-                    </div>
-                    <p className="text-xs font-medium text-emerald-600 mt-1">
-                        +{metrics.incrementoNomina}% respecto al mes anterior
-                    </p>
-                </CardContent>
-            </Card>
+  // Clase base para las tarjetas: Aceleración por hardware, sombra suave, y elevación en Hover
+  const cardStyles = "group cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white border-muted/40";
+  // Clase base para los contenedores de íconos
+  const iconBoxStyles = "p-2.5 rounded-xl transition-colors duration-300";
 
-            <Card className="shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                    <CardTitle className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
-                        Incidencias Pendientes
-                    </CardTitle>
-                    <AlertTriangle className="w-4 h-4 text-rose-500" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-3xl font-bold text-foreground">
-                        {metrics.incidenciasPendientes}
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                        requieren revision urgente
-                    </p>
-                </CardContent>
-            </Card>
+  return (
+    <>
+      {/* Tarjeta 1: Costo Total */}
+      <Card className={cardStyles}>
+        <CardContent className="p-6">
+          <div className="flex justify-between items-start mb-4">
+            <div className={`${iconBoxStyles} bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white`}>
+              <Wallet className="w-5 h-5" />
+            </div>
+            <div className="text-xs font-semibold text-emerald-600 flex items-center">
+              <span className="text-emerald-500 mr-1">↗</span> +{metrics.incrementoNomina}%
+            </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              Costo Total de Planilla
+            </p>
+            <h3 className="text-2xl font-bold text-foreground">
+              {formatSoles(metrics.totalNomina)}
+            </h3>
+          </div>
+        </CardContent>
+      </Card>
 
-            <Card className="shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                    <CardTitle className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
-                        Tareas Por Aprobar
-                    </CardTitle>
-                    <ClipboardCheck className="w-4 h-4 text-amber-500"/>
-                </CardHeader>
-                <CardContent >
-                    <div className="text-3xl font-bold text-foreground">
-                        {metrics.tareasPorAprobar}
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                        Asignadas por Asistentes
-                    </p>
+      {/* Tarjeta 2: Incidencias */}
+      <Card className={cardStyles}>
+        <CardContent className="p-6">
+          <div className="flex justify-between items-start mb-4">
+            <div className={`${iconBoxStyles} bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white`}>
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div className="text-xs font-medium text-muted-foreground">
+              Pendientes
+            </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              Incidencias Pendientes
+            </p>
+            <h3 className="text-2xl font-bold text-foreground">
+              {metrics.incidenciasPendientes}
+            </h3>
+          </div>
+        </CardContent>
+      </Card>
 
-                </CardContent>
-            </Card>
-            <Card className="shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                    <CardTitle className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
-                        Estado del Periodo
-                    </CardTitle>
-                    <Activity className="w-4 h-4 text-primary" />
-                </CardHeader>
-                <CardContent className="flex flex-col items-start justify-center pt-2">
-                    <Badge 
-                        variant="default" 
-                        className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border-none px-3 py-1"
-                    >
-                        {metrics.estadoPeriodo}
-                    </Badge>
-                </CardContent>
-            </Card>
-            </>
-    )
+      {/* Tarjeta 3: Tareas */}
+      <Card className={cardStyles}>
+        <CardContent className="p-6">
+          <div className="flex justify-between items-start mb-4">
+            <div className={`${iconBoxStyles} bg-amber-100 text-amber-600 group-hover:bg-amber-600 group-hover:text-white`}>
+              <ClipboardCheck className="w-5 h-5" />
+            </div>
+            <div className="text-xs font-medium text-muted-foreground">
+              Por aprobar
+            </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              Tareas por Aprobar
+            </p>
+            <h3 className="text-2xl font-bold text-foreground">
+              {metrics.tareasPorAprobar}
+            </h3>
+          </div>
+        </CardContent>
+      </Card>
 
+      {/* Tarjeta 4: Estado */}
+      <Card className={cardStyles}>
+        <CardContent className="p-6">
+          <div className="flex justify-between items-start mb-4">
+            <div className={`${iconBoxStyles} bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white`}>
+              <RefreshCw className="w-5 h-5" />
+            </div>
+            <div className="text-xs font-medium text-muted-foreground">
+              Estado
+            </div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              Estado del Periodo
+            </p>
+            <div className="pt-1">
+              <Badge 
+                variant="outline" 
+                className="bg-emerald-50 text-emerald-700 border-emerald-200/50 hover:bg-emerald-100 px-3 py-1 font-semibold"
+              >
+                {metrics.estadoPeriodo}
+              </Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </>
+  );
 }
