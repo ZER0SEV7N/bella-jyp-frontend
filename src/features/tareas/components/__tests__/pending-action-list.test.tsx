@@ -6,7 +6,7 @@ import PendingActionList from '../pending-action-list';
 const mockAprobarIncidencia = vi.fn();
 
 describe('PendingActionList Component (CU-19)', () => {
-  
+
   const mockIncidencias = [
     { id: '1', empleado: 'Juan Pérez', tipo: 'Horas Extras', estado: 'pendiente' },
   ];
