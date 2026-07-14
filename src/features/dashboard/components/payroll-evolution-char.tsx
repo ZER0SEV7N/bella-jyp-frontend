@@ -39,7 +39,7 @@ export function PayrollEvolutionChart({data}: PayrollEvolutionChartProps){
             <Card className="col-span-1 md:col-span-4 h-full shadow-sm border-muted/40">
                 <CardHeader>
                     <CardTitle className="text-lg tracking-tight">
-                        Evolucion de Nomina
+                        Evolucion de nomina
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="flex items-center justify-center h-70 text-muted-foreground">
