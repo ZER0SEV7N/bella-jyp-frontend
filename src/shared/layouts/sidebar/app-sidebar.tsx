@@ -36,7 +36,7 @@ export default function AppSidebar({
   return (
     <>
       <SidebarProvider>
-        <Sidebar className="**:data-[slot=sidebar-inner]:bg-primary-blue! **:data-[slot=sidebar-inner]:text-white!">
+        <Sidebar className="**:data-[slot=sidebar-inner]:bg-primary **:data-[slot=sidebar-inner]:text-white!">
           <SidebarHeader className="border-b border-blue-800">
             <Link
               href={'/contador/dashboard'}
