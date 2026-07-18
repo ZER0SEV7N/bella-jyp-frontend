@@ -48,7 +48,7 @@ export function PayrollEvolutionChart({data}: PayrollEvolutionChartProps){
 
             </Card>
         );
-    }
+    } 
     return (
         <Card className="col-span-1 md:col-span-4 h-full shadow-sm group transition-all duration-300 hover:shadow-md border-muted/40">
             <CardHeader className="pb-2">
