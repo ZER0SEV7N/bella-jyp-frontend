@@ -1,5 +1,5 @@
-import React from 'react'
+﻿import { SignInScreen } from "@/features/auth/components/sign-in-screen";
 
-export default function page() {
-  return <div>page</div>
+export default function SignInPage() {
+  return <SignInScreen />;
 }
