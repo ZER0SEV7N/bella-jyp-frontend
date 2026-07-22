@@ -33,12 +33,12 @@ export function SignInScreen({ onSubmit }: SignInScreenProps) {
           </p>
         </div>
         <p className="text-sm text-white/60">
-          Â© 2026 Bella JYP. Todos los derechos reservados.
+          © 2026 Bella JYP. Todos los derechos reservados.
         </p>
       </section>
 
       <section className="flex items-center justify-center p-6 sm:p-10">
-        <Card className="w-full max-w-md border border-slate-200/80 py-7 shadow-xl shadow-slate-200/50">
+        <Card className="w-full max-w-md py-7 shadow-xl shadow-slate-200/50">
           <CardHeader className="px-7 text-center">
             <div className="mx-auto mb-3 grid size-12 place-items-center rounded-xl bg-primary text-primary-foreground lg:hidden">
               <Building2 className="size-6" />

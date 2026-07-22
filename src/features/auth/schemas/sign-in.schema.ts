@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 import { documentTypes } from "@/features/auth/types/auth.type";
 
@@ -13,8 +13,9 @@ export const signInSchema = z.object({
     .max(20, "El documento no puede superar los 20 caracteres."),
   password: z
     .string()
-    .min(1, "Ingresa tu contrasena.")
-    .min(6, "La contrasena debe tener al menos 6 caracteres."),
+    .min(1, "Ingresa tu contraseña.")
+    .min(6, "La contraseña debe tener al menos 6 caracteres."),
 });
 
 export type SignInFormValues = z.infer<typeof signInSchema>;
+

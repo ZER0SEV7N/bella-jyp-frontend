@@ -1,9 +1,9 @@
-export const documentTypes = ["DNI", "Pasaporte", "Carnet de extranjeria"] as const;
+export const documentTypes = ['DNI', 'PAS', 'CE', 'PTP'] as const
 
-export type DocumentType = (typeof documentTypes)[number];
+export type DocumentType = (typeof documentTypes)[number]
 
 export type SignInCredentials = {
-  documentType: DocumentType;
-  documentNumber: string;
-  password: string;
-};
+  documentType: DocumentType
+  documentNumber: string
+  password: string
+}
