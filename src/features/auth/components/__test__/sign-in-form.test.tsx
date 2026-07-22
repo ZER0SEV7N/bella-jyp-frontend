@@ -4,6 +4,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { SignInForm } from '../sign-in-form'
 import { SignInScreen } from '../sign-in-screen'
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+}))
+
 describe('SignInForm', () => {
   it('muestra mensajes cuando se envia sin credenciales', async () => {
     render(<SignInForm />)
@@ -69,5 +73,6 @@ describe('SignInScreen', () => {
     ).toBeInTheDocument()
   })
 })
+
 
 

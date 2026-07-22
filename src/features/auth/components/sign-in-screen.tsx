@@ -1,6 +1,9 @@
-﻿import { Building2 } from 'lucide-react'
+﻿"use client"
+
+import { Building2 } from 'lucide-react'
 
 import { SignInForm } from '@/features/auth/components/sign-in-form'
+import { useAuth } from '@/features/auth/hooks/use-auth'
 import type { SignInCredentials } from '@/features/auth/types/auth.type'
 import {
   Card,
@@ -14,6 +17,14 @@ type SignInScreenProps = {
 }
 
 export function SignInScreen({ onSubmit }: SignInScreenProps) {
+  const { redirectToDashboard } = useAuth()
+
+  const handleSubmit = async (credentials: SignInCredentials) => {
+    // redirige solo despues de completar el envio de las credenciales.
+    await onSubmit?.(credentials)
+    redirectToDashboard()
+  }
+
   return (
     <main className="grid min-h-screen bg-slate-50 lg:grid-cols-[1.05fr_0.95fr]">
       <section className="hidden bg-primary p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
@@ -25,7 +36,7 @@ export function SignInScreen({ onSubmit }: SignInScreenProps) {
         </div>
         <div className="max-w-md">
           <p className="text-4xl leading-tight font-semibold">
-            Tu gestión de planillas, en un solo lugar.
+            Tu gestion de planillas, en un solo lugar.
           </p>
           <p className="mt-5 text-base leading-7 text-white/75">
             Accede de forma segura a las herramientas que necesitas para
@@ -51,7 +62,7 @@ export function SignInScreen({ onSubmit }: SignInScreenProps) {
             </CardDescription>
           </CardHeader>
           <CardContent className="px-7 pt-3">
-            <SignInForm onSubmit={onSubmit} />
+            <SignInForm onSubmit={handleSubmit} />
           </CardContent>
         </Card>
       </section>
