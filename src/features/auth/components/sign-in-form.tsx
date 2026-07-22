@@ -5,6 +5,7 @@ import { Eye, EyeOff, LockKeyhole, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
+import { ForgotPasswordDialog } from '@/features/auth/components/forgot-password-dialog'
 import { signInDefaultValues } from '@/features/auth/data/auth.mock'
 import {
   signInSchema,
@@ -141,13 +142,7 @@ export function SignInForm({ onSubmit }: SignInFormProps) {
           </p>
         )}
         <div className="flex justify-end">
-          <Button
-            className="h-auto p-0 text-primary"
-            type="button"
-            variant="link"
-          >
-            ¿Olvidaste tu contraseña?
-          </Button>
+          <ForgotPasswordDialog />
         </div>
       </div>
 
@@ -161,3 +156,4 @@ export function SignInForm({ onSubmit }: SignInFormProps) {
     </form>
   )
 }
+

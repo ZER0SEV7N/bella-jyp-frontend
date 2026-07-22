@@ -1,4 +1,4 @@
-﻿import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+﻿import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SignInForm } from '../sign-in-form'
@@ -60,6 +60,23 @@ describe('SignInForm', () => {
       screen.getByRole('button', { name: '¿Olvidaste tu contraseña?' }),
     ).toHaveAttribute('type', 'button')
   })
+it('no valida sign-in al enviar el documento del modal', async () => {
+    render(<SignInForm />)
+
+    fireEvent.click(
+      screen.getByRole('button', { name: '¿Olvidaste tu contraseña?' }),
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    // envia solo el documento solicitado por el modal.
+    fireEvent.change(within(dialog).getByPlaceholderText('Numero de documento'), {
+      target: { value: '12345678' },
+    })
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Enviar solicitud' }))
+
+    expect(await screen.findByText('Instrucciones enviadas')).toBeInTheDocument()
+    expect(screen.queryByText('Ingresa tu contraseña.')).not.toBeInTheDocument()
+  })
 })
 describe('SignInScreen', () => {
   it('muestra la pantalla de acceso', () => {
@@ -73,6 +90,7 @@ describe('SignInScreen', () => {
     ).toBeInTheDocument()
   })
 })
+
 
 
 
