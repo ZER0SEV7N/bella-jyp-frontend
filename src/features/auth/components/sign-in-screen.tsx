@@ -5,6 +5,7 @@ import { Building2 } from 'lucide-react'
 
 import { SignInForm } from '@/features/auth/components/sign-in-form'
 import { useAuth } from '@/features/auth/hooks/use-auth'
+import { useLoginMutation } from '@/features/auth/hooks/use-login-mutation'
 import {
   Card,
   CardContent,
@@ -18,10 +19,11 @@ type SignInScreenProps = {
 
 export function SignInScreen({ onSubmit }: SignInScreenProps) {
   const { redirectToDashboard } = useAuth()
+  const loginMutation = useLoginMutation()
 
   const handleSubmit = async (credentials: LoginDTO) => {
-    // redirige solo despues de completar el envio de las credenciales.
-    await onSubmit?.(credentials)
+    // Usa el callback en pruebas o la mutacion real al usar la pantalla normal.
+    await (onSubmit ?? loginMutation.mutateAsync)(credentials)
     redirectToDashboard()
   }
 
@@ -63,6 +65,11 @@ export function SignInScreen({ onSubmit }: SignInScreenProps) {
           </CardHeader>
           <CardContent className="px-7 pt-3">
             <SignInForm onSubmit={handleSubmit} />
+            {loginMutation.isError && (
+              <p className="mt-4 text-sm text-destructive" role="alert">
+                No fue posible iniciar sesion. Verifica tus credenciales.
+              </p>
+            )}
           </CardContent>
         </Card>
       </section>

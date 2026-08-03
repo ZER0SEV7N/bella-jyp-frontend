@@ -1,7 +1,8 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { ForgotPasswordDialog } from "../forgot-password-dialog";
+import { renderWithAuthProviders } from "../../__tests__/render-with-auth-providers";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace: vi.fn() }),
@@ -9,7 +10,7 @@ vi.mock("next/navigation", () => ({
 
 describe("ForgotPasswordDialog", () => {
   it("valida el documento con el contrato compartido", async () => {
-    render(<ForgotPasswordDialog />);
+    renderWithAuthProviders(<ForgotPasswordDialog />);
 
     fireEvent.click(
       screen.getByRole("button", { name: "¿Olvidaste tu contraseña?" }),
@@ -25,7 +26,7 @@ describe("ForgotPasswordDialog", () => {
 
   it("envia el SolicitudRecuperacionDTO", async () => {
     const onSubmit = vi.fn();
-    render(<ForgotPasswordDialog onSubmit={onSubmit} />);
+    renderWithAuthProviders(<ForgotPasswordDialog onSubmit={onSubmit} />);
 
     fireEvent.click(
       screen.getByRole("button", { name: "¿Olvidaste tu contraseña?" }),

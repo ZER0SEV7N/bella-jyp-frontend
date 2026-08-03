@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 
 import { forgotPasswordDefaultValues } from "@/features/auth/data/auth.mock";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { usePasswordRecoveryMutation } from "@/features/auth/hooks/use-password-recovery-mutation";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -27,7 +28,7 @@ import { Input } from "@/shared/components/ui/input";
 type ForgotPasswordDialogProps = {
   onSubmit?: (
     credentials: SolicitudRecuperacionDTO,
-  ) => void | Promise<void>;
+  ) => void | Promise<unknown>;
 };
 
 export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
@@ -37,6 +38,7 @@ export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
     requestForgotPassword,
     resetForgotPasswordRequest,
   } = useAuth();
+  const passwordRecoveryMutation = usePasswordRecoveryMutation();
   const {
     register,
     handleSubmit,
@@ -49,11 +51,18 @@ export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
 
-    if (!nextOpen) resetForgotPasswordRequest();
+    if (!nextOpen) {
+      resetForgotPasswordRequest();
+      passwordRecoveryMutation.reset();
+    }
   };
 
   const submitForm = async (values: SolicitudRecuperacionDTO) => {
-    await requestForgotPassword(values, onSubmit, () => setOpen(false));
+    await requestForgotPassword(
+      values,
+      onSubmit ?? passwordRecoveryMutation.mutateAsync,
+      () => setOpen(false),
+    );
   };
 
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -127,6 +136,11 @@ export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
               )}
             </div>
           </form>
+          {passwordRecoveryMutation.isError && (
+            <p className="text-sm text-destructive" role="alert">
+              No fue posible enviar la solicitud. Intenta nuevamente.
+            </p>
+          )}
           <DialogFooter className="-mx-6 -mb-6 px-6">
             <DialogClose render={<Button type="button" variant="outline" />}>
               Cancelar

@@ -1,16 +1,25 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SignInForm } from '../sign-in-form'
 import { SignInScreen } from '../sign-in-screen'
+import { renderWithAuthProviders } from '../../__tests__/render-with-auth-providers'
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace: vi.fn() }),
 }))
 
+vi.mock('@/features/auth/hooks/use-password-recovery-mutation', () => ({
+  usePasswordRecoveryMutation: () => ({
+    isError: false,
+    mutateAsync: vi.fn(),
+    reset: vi.fn(),
+  }),
+}))
+
 describe('SignInForm', () => {
   it('muestra los mensajes del contrato compartido al enviar datos invalidos', async () => {
-    render(<SignInForm />)
+    renderWithAuthProviders(<SignInForm />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Ingresar' }))
 
@@ -22,7 +31,7 @@ describe('SignInForm', () => {
 
   it('envia el LoginDTO validado', async () => {
     const onSubmit = vi.fn()
-    render(<SignInForm onSubmit={onSubmit} />)
+    renderWithAuthProviders(<SignInForm onSubmit={onSubmit} />)
     fireEvent.change(screen.getByPlaceholderText('Numero de documento'), {
       target: { value: '12345678' },
     })
@@ -41,7 +50,7 @@ describe('SignInForm', () => {
   })
 
   it('permite mostrar y ocultar la contraseña', () => {
-    render(<SignInForm />)
+    renderWithAuthProviders(<SignInForm />)
 
     const password = screen.getByLabelText('Contraseña')
     expect(password).toHaveAttribute('type', 'password')
@@ -51,7 +60,7 @@ describe('SignInForm', () => {
   })
 
   it('muestra el boton para recuperar la contraseña', () => {
-    render(<SignInForm />)
+    renderWithAuthProviders(<SignInForm />)
 
     expect(
       screen.getByRole('button', { name: '¿Olvidaste tu contraseña?' }),
@@ -59,7 +68,7 @@ describe('SignInForm', () => {
   })
 
   it('no valida sign-in al enviar el documento del modal', async () => {
-    render(<SignInForm />)
+    renderWithAuthProviders(<SignInForm />)
 
     fireEvent.click(
       screen.getByRole('button', { name: '¿Olvidaste tu contraseña?' }),
@@ -82,7 +91,7 @@ describe('SignInForm', () => {
 
 describe('SignInScreen', () => {
   it('muestra la pantalla de acceso', () => {
-    render(<SignInScreen />)
+    renderWithAuthProviders(<SignInScreen />)
 
     expect(
       screen.getByRole('heading', { name: 'Bienvenido' }),

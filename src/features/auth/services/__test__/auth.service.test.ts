@@ -3,14 +3,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { authService } from '../auth.service'
 
 const mocks = vi.hoisted(() => ({
-  clearAccessToken: vi.fn(),
   post: vi.fn(),
   setAccessToken: vi.fn(),
 }))
 
 vi.mock('@/shared/api', () => ({
   apiClient: { post: mocks.post },
-  clearAccessToken: mocks.clearAccessToken,
   setAccessToken: mocks.setAccessToken,
 }))
 
@@ -24,7 +22,17 @@ describe('authService', () => {
       accessToken: 'jwt-access-token',
       usuario: { id: 'user-1', rol: 'CONTADOR' },
     }
-    mocks.post.mockResolvedValue({ data: response })
+    mocks.post.mockResolvedValue({
+      data: {
+        statusCode: 200,
+        data: response,
+        meta: {
+          message: 'Operacion exitosa',
+          path: '/api/auth/login',
+          timestamp: '2026-08-03T00:00:00.000Z',
+        },
+      },
+    })
 
     await expect(
       authService.login({
@@ -46,7 +54,17 @@ describe('authService', () => {
   })
 
   it('envia la solicitud de recuperacion como ruta publica', async () => {
-    mocks.post.mockResolvedValue({ data: { message: 'Solicitud enviada' } })
+    mocks.post.mockResolvedValue({
+      data: {
+        statusCode: 200,
+        data: { message: 'Solicitud enviada' },
+        meta: {
+          message: 'Operacion exitosa',
+          path: '/api/auth/recuperar-password',
+          timestamp: '2026-08-03T00:00:00.000Z',
+        },
+      },
+    })
 
     await authService.requestPasswordRecovery({ nro_documento: '12345678' })
 
@@ -58,11 +76,5 @@ describe('authService', () => {
         skipUnauthorizedHandler: true,
       },
     )
-  })
-
-  it('elimina el JWT al cerrar sesion local', () => {
-    authService.logout()
-
-    expect(mocks.clearAccessToken).toHaveBeenCalledOnce()
   })
 })

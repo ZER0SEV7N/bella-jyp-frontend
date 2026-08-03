@@ -17,3 +17,14 @@ export type LoginResponse = {
 export type PasswordRecoveryResponse = {
   message: string
 }
+
+// Representa el formato comun con que Nest devuelve respuestas exitosas.
+export type ApiSuccessResponse<T> = {
+  statusCode: number
+  data: T
+  meta: {
+    message: string
+    path: string
+    timestamp: string
+  }
+}

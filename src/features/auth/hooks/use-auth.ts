@@ -9,7 +9,7 @@ const closeDelay = 3000;
 
 type ForgotPasswordSubmit = (
   credentials: SolicitudRecuperacionDTO,
-) => void | Promise<void>;
+) => void | Promise<unknown>;
 
 export function useAuth() {
   const router = useRouter();
