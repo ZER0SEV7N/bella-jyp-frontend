@@ -1,31 +1,49 @@
-﻿import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 import { ForgotPasswordDialog } from "../forgot-password-dialog";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+}));
+
 describe("ForgotPasswordDialog", () => {
-  it("abre el modal y valida el documento", async () => {
+  it("valida el documento con el contrato compartido", async () => {
     render(<ForgotPasswordDialog />);
 
-    fireEvent.click(screen.getByRole("button", { name: "¿Olvidaste tu contraseña?" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "¿Olvidaste tu contraseña?" }),
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Enviar solicitud" }),
+    );
 
-    expect(await screen.findByRole("heading", { name: "Recupera tu contraseña" })).toBeInTheDocument();
-
-    // valida el documento antes de enviar la solicitud.
-    fireEvent.click(screen.getByRole("button", { name: "Enviar solicitud" }));
-
-    expect(await screen.findByText("Ingresa tu numero de documento.")).toBeInTheDocument();
+    expect(
+      await screen.findByText(/debe tener al menos 8 caracteres/),
+    ).toBeInTheDocument();
   });
 
-  it("muestra el aviso despues de enviar el documento", async () => {
-    render(<ForgotPasswordDialog />);
+  it("envia el SolicitudRecuperacionDTO", async () => {
+    const onSubmit = vi.fn();
+    render(<ForgotPasswordDialog onSubmit={onSubmit} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "¿Olvidaste tu contraseña?" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "¿Olvidaste tu contraseña?" }),
+    );
     fireEvent.change(screen.getByPlaceholderText("Numero de documento"), {
-      target: { value: "12345678" },
+      target: { value: "ab123456" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Enviar solicitud" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Enviar solicitud" }),
+    );
 
-    expect(await screen.findByText("Instrucciones enviadas")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({
+        nro_documento: "AB123456",
+      });
+    });
+    expect(
+      await screen.findByText("Instrucciones enviadas"),
+    ).toBeInTheDocument();
   });
 });

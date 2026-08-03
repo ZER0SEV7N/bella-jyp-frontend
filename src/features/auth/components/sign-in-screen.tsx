@@ -1,10 +1,10 @@
-﻿"use client"
+"use client"
 
+import type { LoginDTO } from '@jyp/shared-contracts'
 import { Building2 } from 'lucide-react'
 
 import { SignInForm } from '@/features/auth/components/sign-in-form'
 import { useAuth } from '@/features/auth/hooks/use-auth'
-import type { SignInCredentials } from '@/features/auth/types/auth.type'
 import {
   Card,
   CardContent,
@@ -13,13 +13,13 @@ import {
 } from '@/shared/components/ui/card'
 
 type SignInScreenProps = {
-  onSubmit?: (credentials: SignInCredentials) => void | Promise<void>
+  onSubmit?: (credentials: LoginDTO) => void | Promise<void>
 }
 
 export function SignInScreen({ onSubmit }: SignInScreenProps) {
   const { redirectToDashboard } = useAuth()
 
-  const handleSubmit = async (credentials: SignInCredentials) => {
+  const handleSubmit = async (credentials: LoginDTO) => {
     // redirige solo despues de completar el envio de las credenciales.
     await onSubmit?.(credentials)
     redirectToDashboard()

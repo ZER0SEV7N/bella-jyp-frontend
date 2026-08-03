@@ -1,13 +1,21 @@
-﻿import type { ForgotPasswordFormValues } from "@/features/auth/schemas/forgot-password.schema";
-import type { SignInFormValues } from "@/features/auth/schemas/sign-in.schema";
+import type {
+  LoginDTO,
+  SolicitudRecuperacionDTO,
+} from "@jyp/shared-contracts";
 
-export const signInDefaultValues: SignInFormValues = {
-  documentType: "DNI",
-  documentNumber: "",
+export const documentTypes = [
+  "DNI",
+  "CE",
+  "PASAPORTE",
+  "PTP",
+] as const satisfies readonly LoginDTO["tipo_documento"][];
+
+export const signInDefaultValues: LoginDTO = {
+  tipo_documento: "DNI",
+  nro_documento: "",
   password: "",
 };
 
-export const forgotPasswordDefaultValues: ForgotPasswordFormValues = {
-  documentType: "DNI",
-  documentNumber: "",
+export const forgotPasswordDefaultValues: SolicitudRecuperacionDTO = {
+  nro_documento: "",
 };

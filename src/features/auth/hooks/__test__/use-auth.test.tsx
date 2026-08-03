@@ -1,4 +1,4 @@
-﻿import { act, renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useAuth } from "../use-auth";
@@ -18,7 +18,6 @@ describe("useAuth", () => {
   it("redirige al dashboard del contador", () => {
     const { result } = renderHook(() => useAuth());
 
-    // confirma que la redireccion no deja sign-in en el historial.
     result.current.redirectToDashboard();
 
     expect(mocks.replace).toHaveBeenCalledWith("/contador/dashboard");
@@ -32,7 +31,7 @@ describe("useAuth", () => {
 
     await act(async () => {
       await result.current.requestForgotPassword(
-        { documentType: "DNI", documentNumber: "12345678" },
+        { nro_documento: "12345678" },
         onSubmit,
         onClose,
       );
@@ -40,8 +39,7 @@ describe("useAuth", () => {
 
     expect(result.current.isForgotPasswordRequestSent).toBe(true);
     expect(onSubmit).toHaveBeenCalledWith({
-      documentType: "DNI",
-      documentNumber: "12345678",
+      nro_documento: "12345678",
     });
 
     act(() => vi.advanceTimersByTime(3000));

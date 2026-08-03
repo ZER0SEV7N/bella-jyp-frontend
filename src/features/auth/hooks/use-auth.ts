@@ -1,15 +1,14 @@
-﻿"use client";
+"use client";
 
+import type { SolicitudRecuperacionDTO } from "@jyp/shared-contracts";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
-import type { ForgotPasswordCredentials } from "@/features/auth/types/auth.type";
 
 const dashboardPath = "/contador/dashboard";
 const closeDelay = 3000;
 
 type ForgotPasswordSubmit = (
-  credentials: ForgotPasswordCredentials,
+  credentials: SolicitudRecuperacionDTO,
 ) => void | Promise<void>;
 
 export function useAuth() {
@@ -35,7 +34,7 @@ export function useAuth() {
   };
 
   const requestForgotPassword = async (
-    credentials: ForgotPasswordCredentials,
+    credentials: SolicitudRecuperacionDTO,
     onSubmit: ForgotPasswordSubmit | undefined,
     onClose: () => void,
   ) => {
