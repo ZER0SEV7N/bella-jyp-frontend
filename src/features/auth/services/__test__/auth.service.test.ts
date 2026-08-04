@@ -4,12 +4,10 @@ import { authService } from '../auth.service'
 
 const mocks = vi.hoisted(() => ({
   post: vi.fn(),
-  setAccessToken: vi.fn(),
 }))
 
 vi.mock('@/shared/api', () => ({
   apiClient: { post: mocks.post },
-  setAccessToken: mocks.setAccessToken,
 }))
 
 describe('authService', () => {
@@ -17,7 +15,7 @@ describe('authService', () => {
     vi.clearAllMocks()
   })
 
-  it('inicia sesion y guarda el JWT recibido', async () => {
+  it('inicia sesion y devuelve los datos recibidos', async () => {
     const response = {
       accessToken: 'jwt-access-token',
       usuario: { id: 'user-1', rol: 'CONTADOR' },
@@ -45,12 +43,8 @@ describe('authService', () => {
     expect(mocks.post).toHaveBeenCalledWith(
       '/auth/login',
       expect.any(Object),
-      {
-        skipAuth: true,
-        skipUnauthorizedHandler: true,
-      },
+      { isPublic: true },
     )
-    expect(mocks.setAccessToken).toHaveBeenCalledWith('jwt-access-token')
   })
 
   it('envia la solicitud de recuperacion como ruta publica', async () => {
@@ -71,10 +65,7 @@ describe('authService', () => {
     expect(mocks.post).toHaveBeenCalledWith(
       '/auth/recuperar-password',
       { nro_documento: '12345678' },
-      {
-        skipAuth: true,
-        skipUnauthorizedHandler: true,
-      },
+      { isPublic: true },
     )
   })
 })

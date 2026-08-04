@@ -1,3 +1,6 @@
+//src/features/auth/services/auth.service.ts
+// Solicitudes HTTP propias de autenticacion
+
 import type { LoginDTO, SolicitudRecuperacionDTO } from '@jyp/shared-contracts'
 
 import type {
@@ -5,44 +8,42 @@ import type {
   LoginResponse,
   PasswordRecoveryResponse,
 } from '@/features/auth/types/auth.types'
-import { apiClient, setAccessToken } from '@/shared/api'
+import { apiClient } from '@/shared/api'
 
-// Inicia sesion, guarda el JWT recibido y devuelve los datos del usuario.
+// Estas rutas no requieren un access token
+const publicRequestConfig = { isPublic: true }
+
+/** Inicia sesion y devuelve el token junto al usuario */
 async function login(credentials: LoginDTO) {
   const { data: response } = await apiClient.post<ApiSuccessResponse<LoginResponse>>(
     '/auth/login',
     credentials,
-    {
-      // Login es publico y un 401 significa credenciales invalidas, no sesion expirada.
-      skipAuth: true,
-      skipUnauthorizedHandler: true,
-    },
+    publicRequestConfig,
   )
-
-  setAccessToken(response.data.accessToken)
 
   return response.data
 }
 
-// Envia la solicitud publica para recuperar la contraseña del usuario.
+/** Solicita las instrucciones para recuperar la contraseña */
 async function requestPasswordRecovery(credentials: SolicitudRecuperacionDTO) {
   const { data: response } = await apiClient.post<
     ApiSuccessResponse<PasswordRecoveryResponse>
-  >(
-    '/auth/recuperar-password',
-    credentials,
-    {
-      // Esta ruta es publica y no debe disparar el manejo global de un 401.
-      skipAuth: true,
-      skipUnauthorizedHandler: true,
-    },
-  )
+  >('/auth/recuperar-password', credentials, publicRequestConfig)
 
   return response.data
 }
 
-// Servicio que deben usar los componentes de auth para comunicar con la API.
+/** Renueva el access token usando la cookie httpOnly del backend */
+async function refreshAccessToken() {
+  const { data: response } = await apiClient.post<
+    ApiSuccessResponse<Pick<LoginResponse, 'accessToken'>>
+  >('/auth/refresh', undefined, publicRequestConfig)
+
+  return response.data.accessToken
+}
+
 export const authService = {
   login,
   requestPasswordRecovery,
+  refreshAccessToken,
 }

@@ -10,8 +10,8 @@ import { type FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { forgotPasswordDefaultValues } from "@/features/auth/data/auth.mock";
-import { useAuth } from "@/features/auth/hooks/use-auth";
 import { usePasswordRecoveryMutation } from "@/features/auth/hooks/use-password-recovery-mutation";
+import { getApiErrorMessage } from "@/features/auth/helpers/api-error-message";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -33,11 +33,7 @@ type ForgotPasswordDialogProps = {
 
 export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
   const [open, setOpen] = useState(false);
-  const {
-    isForgotPasswordRequestSent,
-    requestForgotPassword,
-    resetForgotPasswordRequest,
-  } = useAuth();
+  const [isRequestSent, setIsRequestSent] = useState(false);
   const passwordRecoveryMutation = usePasswordRecoveryMutation();
   const {
     register,
@@ -52,17 +48,14 @@ export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
     setOpen(nextOpen);
 
     if (!nextOpen) {
-      resetForgotPasswordRequest();
+      setIsRequestSent(false);
       passwordRecoveryMutation.reset();
     }
   };
 
   const submitForm = async (values: SolicitudRecuperacionDTO) => {
-    await requestForgotPassword(
-      values,
-      onSubmit ?? passwordRecoveryMutation.mutateAsync,
-      () => setOpen(false),
-    );
+    await (onSubmit ?? passwordRecoveryMutation.mutateAsync)(values);
+    setIsRequestSent(true);
   };
 
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -84,7 +77,7 @@ export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
       >
         ¿Olvidaste tu contraseña?
       </DialogTrigger>
-      {isForgotPasswordRequestSent ? (
+      {isRequestSent ? (
         <DialogContent className="gap-4 p-8 text-center" showCloseButton={false}>
           <div className="mx-auto grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
             <CircleCheck className="size-7" />
@@ -93,9 +86,14 @@ export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
             <DialogTitle className="text-xl">Instrucciones enviadas</DialogTitle>
             <DialogDescription className="max-w-xs">
               Enviamos las instrucciones a tu correo. Este modal se cerrara
-              automaticamente.
+              cuando termines.
             </DialogDescription>
           </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button type="button" />}>
+              Cerrar
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       ) : (
         <DialogContent className="gap-6 p-6" showCloseButton={false}>
@@ -138,7 +136,10 @@ export function ForgotPasswordDialog({ onSubmit }: ForgotPasswordDialogProps) {
           </form>
           {passwordRecoveryMutation.isError && (
             <p className="text-sm text-destructive" role="alert">
-              No fue posible enviar la solicitud. Intenta nuevamente.
+            {getApiErrorMessage(
+              passwordRecoveryMutation.error,
+              "No fue posible enviar la solicitud. Intenta nuevamente.",
+            )}
             </p>
           )}
           <DialogFooter className="-mx-6 -mb-6 px-6">

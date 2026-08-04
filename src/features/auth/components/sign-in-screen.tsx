@@ -1,10 +1,12 @@
-"use client"
+'use client'
 
 import type { LoginDTO } from '@jyp/shared-contracts'
 import { Building2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 import { SignInForm } from '@/features/auth/components/sign-in-form'
-import { useAuth } from '@/features/auth/hooks/use-auth'
+import { getApiErrorMessage } from '@/features/auth/helpers/api-error-message'
+import { getRoleDashboardPath } from '@/features/auth/helpers/auth-routing'
 import { useLoginMutation } from '@/features/auth/hooks/use-login-mutation'
 import {
   Card,
@@ -18,13 +20,15 @@ type SignInScreenProps = {
 }
 
 export function SignInScreen({ onSubmit }: SignInScreenProps) {
-  const { redirectToDashboard } = useAuth()
+  const router = useRouter()
   const loginMutation = useLoginMutation()
 
-  const handleSubmit = async (credentials: LoginDTO) => {
-    // Usa el callback en pruebas o la mutacion real al usar la pantalla normal.
-    await (onSubmit ?? loginMutation.mutateAsync)(credentials)
-    redirectToDashboard()
+  async function handleSubmit(credentials: LoginDTO) {
+    const response = await (onSubmit ?? loginMutation.mutateAsync)(credentials)
+
+    if (response && typeof response === 'object' && 'usuario' in response) {
+      router.replace(getRoleDashboardPath(response.usuario.rol))
+    }
   }
 
   return (
@@ -46,7 +50,7 @@ export function SignInScreen({ onSubmit }: SignInScreenProps) {
           </p>
         </div>
         <p className="text-sm text-white/60">
-          © 2026 Bella JYP. Todos los derechos reservados.
+          2026 Bella JYP. Todos los derechos reservados.
         </p>
       </section>
 
@@ -67,7 +71,10 @@ export function SignInScreen({ onSubmit }: SignInScreenProps) {
             <SignInForm onSubmit={handleSubmit} />
             {loginMutation.isError && (
               <p className="mt-4 text-sm text-destructive" role="alert">
-                No fue posible iniciar sesion. Verifica tus credenciales.
+                {getApiErrorMessage(
+                  loginMutation.error,
+                  'No fue posible iniciar sesion. Verifica tus credenciales.',
+                )}
               </p>
             )}
           </CardContent>

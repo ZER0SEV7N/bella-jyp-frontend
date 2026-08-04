@@ -1,6 +1,9 @@
+//src/features/auth/providers/auth-provider.tsx
+// Estado global y ciclo de vida de la sesion
+
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { AuthContext } from '@/features/auth/context/auth-context'
@@ -9,47 +12,94 @@ import {
   getStoredAuthenticatedUser,
   storeAuthenticatedUser,
 } from '@/features/auth/helpers/auth-session-storage'
-import type { AuthenticatedUser } from '@/features/auth/types/auth.types'
-import { UNAUTHORIZED_EVENT, clearAccessToken } from '@/shared/api'
+import {
+  clearAccessToken,
+  getAccessToken,
+  setAccessToken,
+} from '@/features/auth/helpers/auth-token-storage'
+import { authService } from '@/features/auth/services/auth.service'
+import type {
+  AuthenticatedUser,
+  LoginResponse,
+} from '@/features/auth/types/auth.types'
+import { setApiAccessToken } from '@/shared/api'
 
 const SIGN_IN_PATH = '/sign-in'
 
-// Comparte el usuario autenticado y responde al vencimiento del JWT.
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Inicializa la sesion desde sessionStorage cuando el provider se monta.
-  const [user, setUser] = useState<AuthenticatedUser | null>(
-    getStoredAuthenticatedUser,
-  )
+  const [user, setUser] = useState<AuthenticatedUser | null>(null)
+  const [token, setToken] = useState<string | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
   const router = useRouter()
 
-  const logout = useCallback(() => {
+  /** Guarda el token y lo prepara para las solicitudes privadas */
+  function saveToken(nextToken: string) {
+    setAccessToken(nextToken)
+    setApiAccessToken(nextToken)
+    setToken(nextToken)
+  }
+
+  /** Elimina todos los datos locales de la sesion */
+  function clearSession() {
     clearAccessToken()
     clearStoredAuthenticatedUser()
+    setApiAccessToken(null)
+    setToken(null)
     setUser(null)
-    router.replace(SIGN_IN_PATH)
-  }, [router])
+  }
 
-  const setAuthenticatedUser = useCallback((nextUser: AuthenticatedUser) => {
-    storeAuthenticatedUser(nextUser)
-    setUser(nextUser)
-  }, [])
+  /** Inicia la sesion despues de un login correcto */
+  function setSession({ accessToken, usuario }: LoginResponse) {
+    saveToken(accessToken)
+    storeAuthenticatedUser(usuario)
+    setUser(usuario)
+  }
+
+  /** Cierra sesion y retorna al formulario de acceso */
+  function logout() {
+    clearSession()
+    router.replace(SIGN_IN_PATH)
+  }
 
   useEffect(() => {
-    // El cliente HTTP emite este evento si el JWT recibe una respuesta 401.
-    window.addEventListener(UNAUTHORIZED_EVENT, logout)
+    async function initAuth() {
+      const storedUser = getStoredAuthenticatedUser()
+      const storedToken = getAccessToken()
 
-    return () => window.removeEventListener(UNAUTHORIZED_EVENT, logout)
-  }, [logout])
+      if (!storedUser || !storedToken) {
+        clearSession()
+        setIsInitialized(true)
+        return
+      }
 
-  const value = useMemo(
-    () => ({
-      user,
-      isAuthenticated: user !== null,
-      setAuthenticatedUser,
-      logout,
-    }),
-    [logout, setAuthenticatedUser, user],
+      // Verifica la cookie de refresh antes de restaurar la sesion
+      try {
+        const refreshedToken = await authService.refreshAccessToken()
+
+        saveToken(refreshedToken)
+        setUser(storedUser)
+      } catch {
+        clearSession()
+      } finally {
+        setIsInitialized(true)
+      }
+    }
+
+    void initAuth()
+  }, [])
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isAuthenticated: token !== null,
+        isInitialized,
+        setSession,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   )
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

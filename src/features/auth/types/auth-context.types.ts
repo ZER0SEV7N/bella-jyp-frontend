@@ -1,8 +1,13 @@
-import type { AuthenticatedUser } from '@/features/auth/types/auth.types'
+import type {
+  AuthenticatedUser,
+  LoginResponse,
+} from '@/features/auth/types/auth.types'
 
 export type AuthContextValue = {
   user: AuthenticatedUser | null
+  token: string | null
   isAuthenticated: boolean
-  setAuthenticatedUser: (user: AuthenticatedUser) => void
+  isInitialized: boolean
+  setSession: (session: LoginResponse) => void
   logout: () => void
 }
