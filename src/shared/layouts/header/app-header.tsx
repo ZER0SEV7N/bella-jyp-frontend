@@ -11,15 +11,26 @@ import {
   AvatarImage,
 } from '@/shared/components/ui/avatar'
 import Link from 'next/link'
+import type { SidebarNavItem } from '@/shared/types/sidebar'
 
-export default function AppHeader() {
+type AppHeaderProps = {
+  items: SidebarNavItem[]
+  profileUrl: string
+  roleLabel: string
+}
+
+export default function AppHeader({
+  items,
+  profileUrl,
+  roleLabel,
+}: AppHeaderProps) {
   const pathname = usePathname()
   const period = useCurrentPeriod()
   return (
     <header className="w-full border-b border-border h-14 flex items-center px-2 justify-between">
       <div className="flex gap-4 items-center">
         <SidebarTrigger variant={'ghost'} />
-        <BreadcrumbTitle pathname={pathname} />
+        <BreadcrumbTitle items={items} pathname={pathname} />
       </div>
       <div className="flex gap-3 items-center">
         <div className="bg-accent px-4 rounded-4xl text-sm flex items-center gap-1 h-10">
@@ -28,12 +39,12 @@ export default function AppHeader() {
         </div>
         <Separator orientation="vertical" className={'h-10 self-center!'} />
         <Link
-          href={'/contador/perfil'}
+          href={profileUrl}
           className="flex gap-2 items-center hover:bg-accent p-1 px-2 m-0 rounded-md"
         >
           <div className="flex flex-col text-end">
             <span className="text-sm">Rodrigo Castillo</span>
-            <span className="text-xs text-muted-foreground">Contador</span>
+            <span className="text-xs text-muted-foreground">{roleLabel}</span>
           </div>
           <Avatar size="lg">
             <AvatarImage src={'https://github.com/shadcn.png'}></AvatarImage>

@@ -12,17 +12,16 @@ import {
   getStoredAuthenticatedUser,
   storeAuthenticatedUser,
 } from '@/features/auth/helpers/auth-session-storage'
-import {
-  clearAccessToken,
-  getAccessToken,
-  setAccessToken,
-} from '@/features/auth/helpers/auth-token-storage'
-import { authService } from '@/features/auth/services/auth.service'
 import type {
   AuthenticatedUser,
   LoginResponse,
 } from '@/features/auth/types/auth.types'
-import { setApiAccessToken } from '@/shared/api'
+import {
+  clearAccessToken,
+  setAccessToken,
+  subscribeToAccessToken,
+} from '@/shared/api/access-token-storage'
+import { refreshAccessToken } from '@/shared/api/refresh-access-token'
 
 const SIGN_IN_PATH = '/sign-in'
 
@@ -35,7 +34,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /** Guarda el token y lo prepara para las solicitudes privadas */
   function saveToken(nextToken: string) {
     setAccessToken(nextToken)
-    setApiAccessToken(nextToken)
     setToken(nextToken)
   }
 
@@ -43,7 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   function clearSession() {
     clearAccessToken()
     clearStoredAuthenticatedUser()
-    setApiAccessToken(null)
     setToken(null)
     setUser(null)
   }
@@ -62,30 +59,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    let isActive = true
+
+    const unsubscribe = subscribeToAccessToken((nextToken) => {
+      setToken(nextToken)
+
+      if (!nextToken) {
+        clearStoredAuthenticatedUser()
+        setUser(null)
+      }
+    })
+
     async function initAuth() {
       const storedUser = getStoredAuthenticatedUser()
-      const storedToken = getAccessToken()
 
-      if (!storedUser || !storedToken) {
+      if (!storedUser) {
         clearSession()
-        setIsInitialized(true)
+
+        if (isActive) {
+          setIsInitialized(true)
+        }
+
         return
       }
 
       // Verifica la cookie de refresh antes de restaurar la sesion
       try {
-        const refreshedToken = await authService.refreshAccessToken()
+        await refreshAccessToken()
 
-        saveToken(refreshedToken)
-        setUser(storedUser)
+        if (isActive) {
+          setUser(storedUser)
+        }
       } catch {
-        clearSession()
+        if (isActive) {
+          clearSession()
+        }
       } finally {
-        setIsInitialized(true)
+        if (isActive) {
+          setIsInitialized(true)
+        }
       }
     }
 
     void initAuth()
+
+    return () => {
+      isActive = false
+      unsubscribe()
+    }
   }, [])
 
   return (

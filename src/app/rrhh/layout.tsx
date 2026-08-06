@@ -5,21 +5,19 @@ import type { ReactNode } from 'react'
 import { AuthRouteGuard } from '@/features/auth/components/auth-route-guard'
 import { useAuthContext } from '@/features/auth/context/auth-context'
 import { AppShell } from '@/features/navigation/components/app-shell'
-import { contadorSidebar } from '@/features/navigation/data/sidebar'
+import { rrhhSidebar } from '@/features/navigation/data/sidebar'
 
-export default function ContadorLayout({
-  children,
-}: Readonly<{ children: ReactNode }>) {
+export default function RrhhLayout({ children }: { children: ReactNode }) {
   const { logout } = useAuthContext()
 
   return (
-    <AuthRouteGuard allowedRoles={['CONTADOR']}>
+    <AuthRouteGuard allowedRoles={['RRHH']}>
       <AppShell
-        homeUrl="/contador/dashboard"
-        items={contadorSidebar}
+        homeUrl="/rrhh/dashboard"
+        items={rrhhSidebar}
         onLogout={logout}
-        profileUrl="/contador/perfil"
-        roleLabel="Contador"
+        profileUrl="/rrhh/perfil"
+        roleLabel="Recursos Humanos"
       >
         {children}
       </AppShell>

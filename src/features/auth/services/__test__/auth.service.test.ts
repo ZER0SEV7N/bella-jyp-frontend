@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
 }))
 
 vi.mock('@/shared/api', () => ({
-  apiClient: { post: mocks.post },
+  httpClient: { post: mocks.post },
 }))
 
 describe('authService', () => {
@@ -43,7 +43,6 @@ describe('authService', () => {
     expect(mocks.post).toHaveBeenCalledWith(
       '/auth/login',
       expect.any(Object),
-      { isPublic: true },
     )
   })
 
@@ -65,7 +64,6 @@ describe('authService', () => {
     expect(mocks.post).toHaveBeenCalledWith(
       '/auth/recuperar-password',
       { nro_documento: '12345678' },
-      { isPublic: true },
     )
   })
 })
