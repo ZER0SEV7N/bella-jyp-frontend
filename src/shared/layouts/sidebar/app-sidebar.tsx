@@ -17,21 +17,24 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/shared/components/ui/sidebar'
-import { contadorSidebar } from '@/shared/data/sidebar'
 import NavLink from './nav-link'
 import NavGroup from './nav-group'
 import { useSidebarGroupState } from '@/shared/hooks/use-sidebar-group'
+import type { SidebarNavItem } from '@/shared/types/sidebar'
 
 export default function AppSidebar({
   children,
+  homeUrl,
+  items,
+  onLogout,
 }: {
   children: React.ReactNode
+  homeUrl: string
+  items: SidebarNavItem[]
+  onLogout: () => void
 }) {
   const pathname = usePathname() // Variable que obtiene la ruta
-  const { openGroup, setOpenGroup } = useSidebarGroupState(
-    contadorSidebar,
-    pathname,
-  )
+  const { openGroup, setOpenGroup } = useSidebarGroupState(items, pathname)
 
   return (
     <>
@@ -39,7 +42,7 @@ export default function AppSidebar({
         <Sidebar className="**:data-[slot=sidebar-inner]:bg-primary **:data-[slot=sidebar-inner]:text-white!">
           <SidebarHeader className="border-b border-blue-800">
             <Link
-              href={'/contador/dashboard'}
+              href={homeUrl}
               className="flex flex-row justify-center items-center gap-3 w-full my-5"
             >
               <Image src={'/jyp.svg'} alt="logo-jyp" width={95} height={65} />
@@ -58,7 +61,7 @@ export default function AppSidebar({
             <SidebarGroup className="p-0 m-0">
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {contadorSidebar.map((item) =>
+                  {items.map((item) =>
                     item.type === 'link' ? (
                       <NavLink
                         key={item.title}
@@ -87,10 +90,10 @@ export default function AppSidebar({
                 <SidebarMenuButton
                   className="rounded-none pl-5 h-10 hover:bg-secondary-blue active:bg-secondary-blue border-l-3 border-transparent"
                   render={
-                    <Link href={'/sign-in'}>
+                    <button type="button" onClick={onLogout}>
                       <LogOut color="white" />
                       <span className="text-white">Cerrar Sesión</span>
-                    </Link>
+                    </button>
                   }
                 />
               </SidebarMenuItem>

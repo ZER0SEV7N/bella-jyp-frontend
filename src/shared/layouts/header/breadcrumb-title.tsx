@@ -6,13 +6,14 @@ import {
   BreadcrumbSeparator,
 } from '@/shared/components/ui/breadcrumb'
 import { getBreadcrumbMatch } from '@/shared/utils/header/breadcrumb-match'
-import { contadorSidebar } from '@/shared/data/sidebar'
+import type { SidebarNavItem } from '@/shared/types/sidebar'
 
 type BreadcrumbProps = {
+  items: SidebarNavItem[]
   pathname: string
 }
-export default function BreadcrumbTitle({ pathname }: BreadcrumbProps) {
-  const breadcrumbMatch = getBreadcrumbMatch(pathname, contadorSidebar)
+export default function BreadcrumbTitle({ items, pathname }: BreadcrumbProps) {
+  const breadcrumbMatch = getBreadcrumbMatch(pathname, items)
 
   if (!breadcrumbMatch) return null
 
