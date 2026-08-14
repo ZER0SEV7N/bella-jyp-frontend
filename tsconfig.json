@@ -19,11 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@jyp/shared-contracts": [
-        "./node_modules/@jyp/shared-contracts/src/auth/auth.schema.ts"
-      ],
-      "zod": ["./node_modules/zod"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [

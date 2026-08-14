@@ -49,6 +49,17 @@
   --color-primary-blue: var(--blue-primary);
   --color-secondary-blue: var(--blue-secondary);
   --color-collapsible-blue: var(--blue-collapsible);
+  --color-brand-blue-50: var(--brand-blue-50);
+  --color-brand-blue-100: var(--brand-blue-100);
+  --color-brand-blue-200: var(--brand-blue-200);
+  --color-brand-blue-300: var(--brand-blue-300);
+  --color-brand-blue-400: var(--brand-blue-400);
+  --color-brand-blue-500: var(--brand-blue-500);
+  --color-brand-blue-600: var(--brand-blue-600);
+  --color-brand-blue-700: var(--brand-blue-700);
+  --color-brand-blue-800: var(--brand-blue-800);
+  --color-brand-blue-900: var(--brand-blue-900);
+  --color-brand-blue-950: var(--brand-blue-950);
   --animate-collapsible-down: collapsible-down 0.2s ease-out;
   --animate-collapsible-up: collapsible-up 0.2s ease-out;
 
@@ -71,44 +82,57 @@
 }
 
 :root {
+  /* Paleta azul corporativa basada en #150AB4 */
+  --brand-blue-50: #f1f0ff;
+  --brand-blue-100: #e4e2ff;
+  --brand-blue-200: #cbc7ff;
+  --brand-blue-300: #aaa3ff;
+  --brand-blue-400: #8174ff;
+  --brand-blue-500: #5941f4;
+  --brand-blue-600: #3820d6;
+  --brand-blue-700: #150ab4;
+  --brand-blue-800: #170c8f;
+  --brand-blue-900: #180d71;
+  --brand-blue-950: #0b063f;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
 
   /* Identidad Corporativa JYP (#150AB4) */
-  --primary: hsl(244, 94%, 39%);
-  --primary-foreground: hsl(0, 0%, 100%);
+  --primary: var(--brand-blue-700);
+  --primary-foreground: #ffffff;
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary: var(--brand-blue-50);
+  --secondary-foreground: var(--brand-blue-900);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: var(--brand-blue-50);
+  --accent-foreground: var(--brand-blue-900);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --ring: var(--brand-blue-500);
+  --chart-1: var(--brand-blue-700);
+  --chart-2: var(--brand-blue-500);
+  --chart-3: var(--brand-blue-300);
+  --chart-4: var(--brand-blue-800);
+  --chart-5: var(--brand-blue-100);
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-primary: var(--brand-blue-700);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--brand-blue-50);
+  --sidebar-accent-foreground: var(--brand-blue-900);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --blue-primary: oklch(35.9% 0.234 267.5);
-  --blue-secondary: oklch(31.6% 0.147 264.4);
-  --blue-collapsible: oklch(37.3% 0.159 264.7);
+  --blue-primary: var(--brand-blue-700);
+  --blue-secondary: var(--brand-blue-800);
+  --blue-collapsible: var(--brand-blue-600);
 }
 
 .dark {
@@ -116,8 +140,8 @@
   --foreground: oklch(0.985 0 0);
 
   /* Identidad Corporativa JYP en Modo Oscuro (puedes ajustarlo si necesitas que brille más) */
-  --primary: hsl(244, 94%, 39%);
-  --primary-foreground: hsl(0, 0%, 100%);
+  --primary: var(--brand-blue-400);
+  --primary-foreground: var(--brand-blue-950);
 
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -127,23 +151,23 @@
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: color-mix(in oklch, var(--brand-blue-800) 38%, transparent);
+  --accent-foreground: var(--brand-blue-100);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --ring: var(--brand-blue-400);
+  --chart-1: var(--brand-blue-300);
+  --chart-2: var(--brand-blue-500);
+  --chart-3: var(--brand-blue-700);
+  --chart-4: var(--brand-blue-200);
+  --chart-5: var(--brand-blue-800);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-primary: var(--brand-blue-400);
+  --sidebar-primary-foreground: var(--brand-blue-950);
+  --sidebar-accent: color-mix(in oklch, var(--brand-blue-800) 40%, transparent);
+  --sidebar-accent-foreground: var(--brand-blue-100);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }

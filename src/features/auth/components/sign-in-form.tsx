@@ -5,7 +5,6 @@ import { LoginSchema, type LoginDTO } from '@jyp/shared-contracts'
 import { Eye, EyeOff, LockKeyhole, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { ForgotPasswordDialog } from '@/features/auth/components/forgot-password-dialog'
 import {
@@ -26,7 +25,7 @@ type SignInFormProps = {
   onSubmit?: (credentials: LoginDTO) => void | Promise<void>
 }
 
-type LoginFormValues = z.input<typeof LoginSchema>
+type LoginFormValues = typeof LoginSchema._input
 
 export function SignInForm({ onSubmit }: SignInFormProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)

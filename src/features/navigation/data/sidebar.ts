@@ -1,4 +1,5 @@
 import {
+  Building2,
   CalendarCheck,
   CalendarClock,
   Clipboard,
@@ -81,6 +82,12 @@ export const rrhhSidebar: SidebarNavItem[] = [
       { title: 'Empleados', url: '/rrhh/personal/empleados' },
       { title: 'Contratos', url: '/rrhh/personal/contratos' },
     ],
+  },
+  {
+    type: 'group',
+    title: 'Organización',
+    icon: Building2,
+    items: [{ title: 'Áreas', url: '/rrhh/organizacion/areas' }],
   },
   {
     type: 'group',

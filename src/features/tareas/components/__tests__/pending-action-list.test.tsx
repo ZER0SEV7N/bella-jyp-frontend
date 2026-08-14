@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import PendingActionList from '../pending-action-list'; 
+import PendingActionList, { type Incidencia } from '../pending-action-list'; 
 
 // Mock de la Server Action o función asíncrona de mutación
 const mockAprobarIncidencia = vi.fn();
 
 describe('PendingActionList Component (CU-19)', () => {
   
-  const mockIncidencias = [
+  const mockIncidencias: Incidencia[] = [
     { id: '1', empleado: 'Juan Pérez', tipo: 'Horas Extras', estado: 'pendiente' },
   ];
 
