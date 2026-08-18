@@ -1,6 +1,5 @@
 'use client'
 
-import type { Cargo } from '../types/cargo.types'
 import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
@@ -12,34 +11,41 @@ import {
   DialogTitle,
 } from '@/shared/components/ui/dialog'
 
-type CargoStatusDialogProps = {
-  cargo: Cargo | null
-  isSubmitting: boolean
+type StatusChangeModalProps = {
+  isOpen: boolean
+  isActive: boolean
+  isLoading: boolean
+  recordName: string
+  entityType: string
+  deactivationNote: string
+  onOpenChange: (isOpen: boolean) => void
   onConfirm: () => Promise<void>
-  onOpenChange: (open: boolean) => void
-  open: boolean
 }
 
-/** Confirma el cambio de estado del cargo seleccionado. */
-export function CargoStatusDialog({
-  cargo,
-  isSubmitting,
-  onConfirm,
+/** Confirma el cambio de estado de un registro de RRHH. */
+export function StatusChangeModal({
+  isOpen,
+  isActive,
+  isLoading,
+  recordName,
+  entityType,
+  deactivationNote,
   onOpenChange,
-  open,
-}: CargoStatusDialogProps) {
-  const isActive = cargo?.activo ?? true
+  onConfirm,
+}: StatusChangeModalProps) {
+  const actionLabel = isActive ? 'Desactivar' : 'Reactivar'
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="gap-5 p-6 sm:max-w-md" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>
-            {isActive ? 'Desactivar cargo' : 'Reactivar cargo'}
+            {actionLabel} {entityType}
           </DialogTitle>
           <DialogDescription>
             {isActive
-              ? `¿Deseas desactivar “${cargo?.nombre}”? Sólo será posible si no tiene empleados activos asignados.`
-              : `¿Deseas reactivar “${cargo?.nombre}” para volver a utilizarlo?`}
+              ? `¿Deseas desactivar “${recordName}”? ${deactivationNote}`
+              : `¿Deseas reactivar “${recordName}” para volver a utilizarlo?`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="-mx-6 -mb-6 px-6">
@@ -47,16 +53,12 @@ export function CargoStatusDialog({
             Cancelar
           </DialogClose>
           <Button
-            disabled={isSubmitting}
+            disabled={isLoading}
             onClick={() => void onConfirm()}
             type="button"
             variant={isActive ? 'destructive' : 'default'}
           >
-            {isSubmitting
-              ? 'Procesando...'
-              : isActive
-                ? 'Desactivar cargo'
-                : 'Reactivar cargo'}
+            {isLoading ? 'Procesando...' : `${actionLabel} ${entityType}`}
           </Button>
         </DialogFooter>
       </DialogContent>

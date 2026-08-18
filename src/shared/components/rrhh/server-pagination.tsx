@@ -1,6 +1,4 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { CARGO_PAGE_LIMIT_OPTIONS } from '../data/cargo-pagination'
-import type { CargoPageLimit } from '../types/cargo.types'
 import { Button } from '@/shared/components/ui/button'
 import {
   Select,
@@ -10,28 +8,37 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select'
 
-type CargosPaginationProps = {
-  limit: CargoPageLimit
+type ServerPaginationProps = {
+  pageSize: number
+  pageSizeOptions: readonly number[]
   page: number
   total: number
   totalPages: number
-  onLimitChange: (limit: CargoPageLimit) => void
+  singularLabel: string
+  pluralLabel: string
+  onPageSizeChange: (pageSize: number) => void
   onPageChange: (page: number) => void
 }
 
-/** Navegación controlada de la paginación resuelta en el servidor. */
-export function CargosPagination({
-  limit,
+/** Proporciona los controles para un listado paginado por el servidor. */
+export function ServerPagination({
+  pageSize,
+  pageSizeOptions,
   page,
   total,
   totalPages,
-  onLimitChange,
+  singularLabel,
+  pluralLabel,
+  onPageSizeChange,
   onPageChange,
-}: CargosPaginationProps) {
+}: ServerPaginationProps) {
+  const visiblePage = Math.min(page, Math.max(totalPages, 1))
+  const visibleTotalPages = Math.max(totalPages, 1)
+
   return (
     <footer className="flex flex-col gap-3 border-t p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <p className="text-muted-foreground">
-        {total} {total === 1 ? 'cargo registrado' : 'cargos registrados'}
+        {total} {total === 1 ? singularLabel : pluralLabel}
       </p>
       <div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
         <div className="flex items-center gap-2">
@@ -39,16 +46,14 @@ export function CargosPagination({
             Filas por página
           </span>
           <Select
-            value={String(limit)}
-            onValueChange={(value) =>
-              onLimitChange(Number(value) as CargoPageLimit)
-            }
+            value={String(pageSize)}
+            onValueChange={(value) => onPageSizeChange(Number(value))}
           >
             <SelectTrigger aria-label="Filas por página" className="h-8 w-20">
-              <SelectValue>{limit}</SelectValue>
+              <SelectValue>{pageSize}</SelectValue>
             </SelectTrigger>
             <SelectContent align="end">
-              {CARGO_PAGE_LIMIT_OPTIONS.map((option) => (
+              {pageSizeOptions.map((option) => (
                 <SelectItem key={option} value={String(option)}>
                   {option}
                 </SelectItem>
@@ -57,8 +62,7 @@ export function CargosPagination({
           </Select>
         </div>
         <span className="text-xs text-muted-foreground">
-          Página {Math.min(page, Math.max(totalPages, 1))} de{' '}
-          {Math.max(totalPages, 1)}
+          Página {visiblePage} de {visibleTotalPages}
         </span>
         <Button
           aria-label="Página anterior"

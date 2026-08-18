@@ -1,15 +1,16 @@
 'use client'
 
 import { AreaFormDialog } from './area-form-dialog'
-import { AreaStatusDialog } from './area-status-dialog'
-import { AreasFeedback } from './areas-feedback'
 import { AreasHeader } from './areas-header'
-import { AreasPagination } from './areas-pagination'
 import { AreasSummaryCards } from './areas-summary-cards'
 import { AreasTable } from './areas-table'
 import { AreasToolbar } from './areas-toolbar'
 import { useAreasPage } from '../hooks/use-areas-page'
 import { Card } from '@/shared/components/ui/card'
+import { OperationFeedback } from '@/shared/components/rrhh/operation-feedback'
+import { ServerPagination } from '@/shared/components/rrhh/server-pagination'
+import { StatusChangeModal } from '@/shared/components/rrhh/status-change-modal'
+import { AREA_PAGE_LIMIT_OPTIONS } from '../data/area-pagination'
 
 /**
  * Compone la vista principal de administracion de areas.
@@ -24,7 +25,7 @@ export function AreasPage() {
     <main className="mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
       <AreasHeader onCreate={actions.openCreate} />
       <AreasSummaryCards areas={areas} total={meta.total} />
-      <AreasFeedback
+      <OperationFeedback
         feedback={state.feedback}
         loadError={status.loadError}
       />
@@ -42,13 +43,18 @@ export function AreasPage() {
           onEdit={actions.openEdit}
           onStatusChange={actions.openStatus}
         />
-        <AreasPagination
-          limit={filters.limit}
-          onLimitChange={actions.changeLimit}
-          onPageChange={actions.changePage}
+        <ServerPagination
+          pageSize={filters.limit}
+          pageSizeOptions={AREA_PAGE_LIMIT_OPTIONS}
           page={meta.page}
           total={meta.total}
           totalPages={meta.totalPages}
+          singularLabel="área registrada"
+          pluralLabel="áreas registradas"
+          onPageSizeChange={(pageSize) =>
+            actions.changeLimit(pageSize as typeof filters.limit)
+          }
+          onPageChange={actions.changePage}
         />
       </Card>
 
@@ -59,13 +65,18 @@ export function AreasPage() {
         onSubmit={actions.submitArea}
         open={status.formOpen}
       />
-      <AreaStatusDialog
-        area={state.selectedArea}
-        isSubmitting={status.isStatusSubmitting}
-        onConfirm={actions.changeAreaStatus}
-        onOpenChange={actions.closeModal}
-        open={status.statusDialogOpen}
-      />
+      {state.selectedArea && (
+        <StatusChangeModal
+          isOpen={status.statusDialogOpen}
+          isActive={state.selectedArea.activo}
+          isLoading={status.isStatusSubmitting}
+          recordName={state.selectedArea.nombre}
+          entityType="área"
+          deactivationNote="No se puede desactivar si contiene cargos activos asignados."
+          onOpenChange={actions.closeModal}
+          onConfirm={actions.changeAreaStatus}
+        />
+      )}
     </main>
   )
 }

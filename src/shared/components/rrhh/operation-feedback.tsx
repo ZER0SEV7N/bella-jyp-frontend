@@ -1,12 +1,18 @@
-import type { CargoFeedback } from '../types/cargos-page.types'
+type OperationFeedback = {
+  message: string
+  type: 'error' | 'success'
+}
 
-type CargosFeedbackProps = {
-  feedback: CargoFeedback | null
+type OperationFeedbackProps = {
+  feedback: OperationFeedback | null
   loadError: string | null
 }
 
-/** Muestra mensajes de mutaciones y errores de carga de cargos. */
-export function CargosFeedback({ feedback, loadError }: CargosFeedbackProps) {
+/** Presenta mensajes de mutación y errores durante la carga del listado. */
+export function OperationFeedback({
+  feedback,
+  loadError,
+}: OperationFeedbackProps) {
   return (
     <>
       {feedback && (

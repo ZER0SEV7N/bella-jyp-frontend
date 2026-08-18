@@ -1,6 +1,6 @@
-import { AreaTableActions } from '../components/area-table-actions'
 import type { Area } from '../types/area.types'
-import { Badge } from '@/shared/components/ui/badge'
+import { EntityRowActions } from '@/shared/components/rrhh/entity-row-actions'
+import { StatusBadge } from '@/shared/components/rrhh/status-badge'
 import { createDataTableColumnHelper } from '@/shared/lib/data-table/data-table-config'
 
 const columnHelper = createDataTableColumnHelper<Area>()
@@ -37,30 +37,22 @@ export function createAreaColumns({
     }),
     columnHelper.accessor('activo', {
       header: 'Estado',
-      cell: ({ cell }) => {
-        const active = cell.getValue<boolean>()
-
-        return (
-          <Badge variant={active ? 'secondary' : 'outline'}>
-            <span
-              aria-hidden
-              className={
-                active
-                  ? 'size-1.5 rounded-full bg-emerald-500'
-                  : 'size-1.5 rounded-full bg-slate-400'
-              }
-            />
-            {active ? 'Activa' : 'Inactiva'}
-          </Badge>
-        )
-      },
+      cell: ({ cell }) => (
+        <StatusBadge
+          isActive={cell.getValue<boolean>()}
+          activeLabel="Activa"
+          inactiveLabel="Inactiva"
+        />
+      ),
     }),
     columnHelper.display({
       id: 'actions',
       header: () => <span className="block text-right">Acciones</span>,
       cell: ({ row }) => (
-        <AreaTableActions
-          area={row.original}
+        <EntityRowActions
+          entity={row.original}
+          name={row.original.nombre}
+          isActive={row.original.activo}
           onEdit={onEdit}
           onStatusChange={onStatusChange}
         />

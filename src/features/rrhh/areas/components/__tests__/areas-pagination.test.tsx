@@ -1,20 +1,23 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-import { AreasPagination } from '../areas-pagination'
+import { ServerPagination } from '@/shared/components/rrhh/server-pagination'
 
-describe('AreasPagination', () => {
+describe('ServerPagination', () => {
   it('delega la navegacion entre paginas', () => {
     const onPageChange = vi.fn()
 
     render(
-      <AreasPagination
-        limit={10}
-        onLimitChange={vi.fn()}
-        onPageChange={onPageChange}
+      <ServerPagination
+        pageSize={10}
+        pageSizeOptions={[10, 25, 50, 100]}
         page={2}
         total={40}
         totalPages={4}
+        singularLabel="área registrada"
+        pluralLabel="áreas registradas"
+        onPageSizeChange={vi.fn()}
+        onPageChange={onPageChange}
       />,
     )
 
@@ -29,13 +32,16 @@ describe('AreasPagination', () => {
     const onLimitChange = vi.fn()
 
     render(
-      <AreasPagination
-        limit={10}
-        onLimitChange={onLimitChange}
-        onPageChange={vi.fn()}
+      <ServerPagination
+        pageSize={10}
+        pageSizeOptions={[10, 25, 50, 100]}
         page={1}
         total={40}
         totalPages={4}
+        singularLabel="área registrada"
+        pluralLabel="áreas registradas"
+        onPageSizeChange={onLimitChange}
+        onPageChange={vi.fn()}
       />,
     )
 
