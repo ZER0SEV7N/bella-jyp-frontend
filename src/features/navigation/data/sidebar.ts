@@ -87,7 +87,10 @@ export const rrhhSidebar: SidebarNavItem[] = [
     type: 'group',
     title: 'Organización',
     icon: Building2,
-    items: [{ title: 'Áreas', url: '/rrhh/organizacion/areas' }],
+    items: [
+      { title: 'Áreas', url: '/rrhh/organizacion/areas' },
+      { title: 'Cargos', url: '/rrhh/organizacion/cargos' },
+    ],
   },
   {
     type: 'group',
